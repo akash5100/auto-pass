@@ -11,6 +11,6 @@ This tool is designed to run easily on Windows.
 1. Double-click `run.bat`.
 2. The automation will start!
 
-## 💡 Pro Tip for "Uncles"
+## 💡 Pro tip
 - You can right-click `run.bat` and select **Send to -> Desktop (create shortcut)**.
 - Rename that shortcut to "Start Automation" and use it from your desktop anytime!

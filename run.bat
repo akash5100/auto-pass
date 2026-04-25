@@ -1,5 +1,5 @@
 @echo off
-:: Move to the directory where this script is located
+REM Move to the directory where this script is located
 cd /d "%~dp0"
 
 cls
@@ -10,10 +10,25 @@ echo.
 echo [INFO] Please keep this window open while working.
 echo.
 
-:: Run the automation using uv
+REM Check if uv is in PATH
+where uv >nul 2>nul
+if %ERRORLEVEL% neq 0 (
+    REM Try common installation paths
+    if exist "%APPDATA%\uv\bin\uv.exe" (
+        set "PATH=%APPDATA%\uv\bin;%PATH%"
+    ) else if exist "%USERPROFILE%\.cargo\bin\uv.exe" (
+        set "PATH=%USERPROFILE%\.cargo\bin;%PATH%"
+    ) else (
+        echo [ERROR] 'uv' not found. Please run install.bat first.
+        pause
+        exit /b 1
+    )
+)
+
+REM Run the automation using uv
 uv run start.py
 
-:: If something goes wrong, don't just close the window
+REM If something goes wrong, don't just close the window
 if %ERRORLEVEL% neq 0 (
     echo.
     echo ------------------------------------------------------

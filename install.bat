@@ -1,30 +1,30 @@
 @echo off
 setlocal
 
-:: Clear screen and show a friendly header
+REM Clear screen and show a friendly header
 cls
 echo ======================================================
-echo    STEP 1: INSTALLING SOFTWARE (PLEASE WAIT)
+echo    STEP 1: INSTALLING SOFTWARE - PLEASE WAIT
 echo ======================================================
 echo.
 
-:: 1. Check if uv is installed
+REM 1. Check if uv is installed
 where uv >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo [INFO] 'uv' (Python Manager) not found. 
-    echo [INFO] Downloading and installing 'uv'...
+    echo [INFO] uv - Python Manager not found. 
+    echo [INFO] Downloading and installing uv...
     echo.
     
-    :: Use PowerShell to install uv
+    REM Use PowerShell to install uv
     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
     
-    :: Manually add uv to PATH for this specific session
+    REM Manually add uv to PATH for this specific session
     set "PATH=%APPDATA%\uv\bin;%USERPROFILE%\.cargo\bin;%PATH%"
 ) else (
     echo [OK] 'uv' is already installed.
 )
 
-:: 2. Ensure we are in the right directory
+REM 2. Ensure we are in the right directory
 cd /d "%~dp0"
 
 echo.
@@ -33,7 +33,7 @@ echo    STEP 2: PREPARING PYTHON ENVIRONMENT
 echo ======================================================
 echo.
 
-:: Sync dependencies (installs Python automatically if needed)
+REM Sync dependencies - installs Python automatically if needed
 uv sync
 
 echo.
@@ -42,8 +42,8 @@ echo    STEP 3: PREPARING CHROME BROWSER
 echo ======================================================
 echo.
 
-:: Install Playwright browsers
-uv run playwright install chromium
+REM Install Chromium - only this browser to avoid bloat
+uv run python -m playwright install --with-deps chromium
 
 echo.
 echo ======================================================

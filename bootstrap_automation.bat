@@ -1,34 +1,34 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: ==========================================
-:: CONFIGURATION 
-:: (Change these after you create your GitHub repo)
-:: ==========================================
+REM ==========================================
+REM CONFIGURATION 
+REM (Change these after you create your GitHub repo)
+REM ==========================================
 set "GITHUB_USER=akash5100"
 set "GITHUB_REPO=auto-pass"
 set "TARGET_FOLDER=%USERPROFILE%\Downloads\Automation_Tool"
 
-:: ==========================================
-:: LOGIC
-:: ==========================================
+REM ==========================================
+REM LOGIC
+REM ==========================================
 cls
 echo ======================================================
 echo    WELCOME TO AUTOMATION TOOL INSTALLER
 echo ======================================================
 echo.
 
-:: 1. Define URLs and paths
+REM 1. Define URLs and paths
 set "ZIP_URL=https://github.com/%GITHUB_USER%/%GITHUB_REPO%/archive/refs/heads/main.zip"
 set "TEMP_ZIP=%TEMP%\automation_download.zip"
 
-:: 2. Create the target folder
+REM 2. Create the target folder
 if not exist "%TARGET_FOLDER%" (
     echo [INFO] Creating folder in Downloads...
     mkdir "%TARGET_FOLDER%"
 )
 
-:: 3. Download from GitHub
+REM 3. Download from GitHub
 echo [INFO] Downloading the latest code from GitHub...
 powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%ZIP_URL%' -OutFile '%TEMP_ZIP%'"
 
@@ -42,15 +42,15 @@ if %ERRORLEVEL% neq 0 (
     exit /b
 )
 
-:: 4. Extracting
+REM 4. Extracting
 echo [INFO] Extracting files...
 powershell -Command "Expand-Archive -Path '%TEMP_ZIP%' -DestinationPath '%TARGET_FOLDER%' -Force"
 
-:: 5. Cleanup ZIP
+REM 5. Cleanup ZIP
 del "%TEMP_ZIP%"
 
-:: 6. Find the 'install.bat' inside the extracted folder
-:: GitHub ZIPs usually create a folder like 'repo-main' inside the destination
+REM 6. Find the 'install.bat' inside the extracted folder
+REM GitHub ZIPs usually create a folder like 'repo-main' inside the destination
 echo [INFO] Locating the installer...
 for /d %%D in ("%TARGET_FOLDER%\*") do (
     if exist "%%D\install.bat" (
@@ -58,8 +58,17 @@ for /d %%D in ("%TARGET_FOLDER%\*") do (
         echo.
         cd /d "%%D"
         
-        :: Run the installer
+        REM Run the installer
         call install.bat
+        
+        REM 7. Create Desktop Shortcut
+        echo.
+        echo [INFO] Creating Desktop Shortcut...
+        set "SHORTCUT_PATH=%USERPROFILE%\Desktop\Start Automation.lnk"
+        set "TARGET_PATH=%CD%\run.bat"
+        
+        powershell -Command "$s=(New-Object -COM WScript.Shell).CreateShortcut('%SHORTCUT_PATH%');$s.TargetPath='%TARGET_PATH%';$s.WorkingDirectory='%CD%';$s.Save()"
+        
         goto :done
     )
 )
