@@ -1,0 +1,9 @@
+{
+  "status": "active",
+  "message": "System is operational.",
+  "version": "0.1.0",
+  "config": {
+    "BASE_URL": "https://fasalrin.gov.in/",
+    "LIST_URL": "https://fasalrin.gov.in/claim-application-list"
+  }
+}
